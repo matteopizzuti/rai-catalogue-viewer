@@ -1,0 +1,53 @@
+name: Update Rai Catalogue Data
+
+on:
+  schedule:
+    # Runs every day at 3:00 AM UTC (adjust as needed)
+    # Cron syntax: minute hour day(month) month day(week)
+    # For example, to run every 6 hours: '0 */6 * * *'
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Allows manual triggering from the Actions tab
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push changes back to the repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create data directory if it doesn't exist
+        run: mkdir -p data
+
+      - name: Fetch latest catalogue data
+        run: |
+          curl -f -s -o data/catalogue_list.json "https://d135zlh0icj7mk.cloudfront.net/_db_/oggi_in_tv/packaged/audio/catalogue_list.json"
+          if [ $? -ne 0 ]; then
+            echo "::error::Failed to download catalogue_list.json"
+            exit 1
+          fi
+          echo "Successfully downloaded catalogue_list.json"
+          
+      - name: Check for file changes
+        id: check_changes
+        run: |
+          git diff --quiet data/catalogue_list.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/catalogue_list.json
+          git commit -m "Automated update of catalogue_list.json"
+          git push
+          echo "Changes committed and pushed."
+        # If you use a Personal Access Token (PAT) for pushing to protected branches, 
+        # you'd store it as a secret and use it here:
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.YOUR_PAT_SECRET_NAME }}
+
+      - name: No changes to commit
+        if: steps.check_changes.outputs.changed != 'true'
+        run: echo "No changes in catalogue_list.json. Nothing to commit."
