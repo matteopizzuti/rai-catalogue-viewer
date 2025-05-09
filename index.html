@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo Media Rai</title>
+    <style>
+        :root {
+            --bg-color-light: #f4f7f6;
+            --text-color-light: #333;
+            --container-bg-light: #fff;
+            --controls-bg-light: #eef3f7;
+            --card-bg-light: #fff;
+            --card-border-light: #e7e7e7;
+            --input-border-light: #ccc;
+            --rai-blue: #005792;
+            --button-primary-bg-light: #007bff;
+            --button-primary-hover-light: #0056b3;
+            --play-button-bg-light: #28a745;
+            --play-button-hover-light: #218838;
+            --download-button-bg-light: #17a2b8;
+            --download-button-hover-light: #138496;
+            --scrollbar-track-light: #f1f1f1;
+            --scrollbar-thumb-light: #ccc;
+            --scrollbar-thumb-hover-light: #aaa;
+            --item-type-bg-light: #eef3f7;
+            --item-type-text-light: #666;
+            --category-title-bg: #005792;
+            --category-title-text: white;
+
+            --bg-color-dark: #121212;
+            --text-color-dark: #e0e0e0;
+            --container-bg-dark: #1e1e1e;
+            --controls-bg-dark: #2a2a2a;
+            --card-bg-dark: #2c2c2c;
+            --card-border-dark: #444;
+            --input-border-dark: #555;
+            --button-primary-bg-dark: #007bff; /* Can keep some primary colors or adjust */
+            --button-primary-hover-dark: #0056b3;
+            --play-button-bg-dark: #28a745;
+            --play-button-hover-dark: #218838;
+            --download-button-bg-dark: #17a2b8;
+            --download-button-hover-dark: #138496;
+            --scrollbar-track-dark: #2c2c2c;
+            --scrollbar-thumb-dark: #555;
+            --scrollbar-thumb-hover-dark: #777;
+            --item-type-bg-dark: #3a3a3a;
+            --item-type-text-dark: #bbb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--container-bg-light);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+        body.dark-mode .container {
+            background-color: var(--container-bg-dark);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+
+        h1 {
+            text-align: center;
+            color: var(--rai-blue); 
+            margin-bottom: 25px;
+        }
+        body.dark-mode h1 {
+            color: #58a6ff; /* Lighter blue for dark mode */
+        }
+
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: var(--controls-bg-light);
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        body.dark-mode .controls {
+            background-color: var(--controls-bg-dark);
+        }
+
+        .controls input[type="text"],
+        .controls select {
+            padding: 10px 12px;
+            border: 1px solid var(--input-border-light);
+            border-radius: 4px;
+            font-size: 16px;
+            flex-grow: 1;
+            background-color: var(--container-bg-light); /* Assuming inputs are on a light bg by default */
+            color: var(--text-color-light);
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .controls input[type="text"],
+        body.dark-mode .controls select {
+            background-color: #3a3a3a;
+            color: var(--text-color-dark);
+            border-color: var(--input-border-dark);
+        }
+
+
+        .controls input[type="text"] {
+            min-width: 200px; /* Adjusted for smaller screens */
+        }
+        
+        .controls select {
+            min-width: 130px; /* Adjusted */
+        }
+        
+        .controls button, #darkModeToggle {
+            padding: 10px 18px;
+            background-color: var(--button-primary-bg-light);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+         body.dark-mode .controls button, body.dark-mode #darkModeToggle {
+            background-color: var(--button-primary-bg-dark);
+            /* color: var(--text-color-dark); Potentially, or keep white */
+        }
+
+
+        .controls button:hover {
+            background-color: var(--button-primary-hover-light);
+        }
+        body.dark-mode .controls button:hover {
+            background-color: var(--button-primary-hover-dark);
+        }
+        
+        #darkModeToggle {
+            margin-left: auto; /* Pushes it to the right */
+        }
+
+
+        .category {
+            margin-bottom: 25px;
+            border: 1px solid var(--card-border-light);
+            border-radius: 6px;
+            overflow: hidden; 
+            transition: border-color 0.3s;
+        }
+        body.dark-mode .category {
+            border-color: var(--card-border-dark);
+        }
+
+        .category-title {
+            background-color: var(--category-title-bg); 
+            color: var(--category-title-text);
+            padding: 12px 18px;
+            font-size: 1.3em;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* No specific dark mode change needed for category-title if bg/text vars are sufficient */
+        
+        .category-title::after {
+            content: '▼'; 
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .category.collapsed .category-title::after {
+            transform: rotate(-90deg); 
+        }
+
+        .item-list {
+            padding: 15px;
+            background-color: var(--card-bg-light); /* Item list bg can be same as card */
+            max-height: 500px; 
+            overflow-y: auto; 
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out, background-color 0.3s;
+        }
+        body.dark-mode .item-list {
+            background-color: var(--bg-color-dark); /* Slightly different from card for depth */
+        }
+        
+        .category.collapsed .item-list {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        .catalogue-item {
+            background-color: var(--card-bg-light);
+            border: 1px solid var(--card-border-light);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        body.dark-mode .catalogue-item {
+            background-color: var(--card-bg-dark);
+            border-color: var(--card-border-dark);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .item-info {
+            flex-grow: 1;
+            margin-right: 15px;
+            min-width: 200px; 
+        }
+
+        .item-title {
+            font-weight: bold;
+            color: var(--text-color-light);
+            margin-bottom: 5px;
+            word-break: break-word;
+            transition: color 0.3s;
+        }
+        body.dark-mode .item-title {
+            color: var(--text-color-dark);
+        }
+
+        .item-type {
+            font-size: 0.9em;
+            color: var(--item-type-text-light);
+            background-color: var(--item-type-bg-light);
+            padding: 3px 8px;
+            border-radius: 3px;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-mode .item-type {
+            color: var(--item-type-text-dark);
+            background-color: var(--item-type-bg-dark);
+        }
+
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0; 
+        }
+
+        .item-actions button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .item-actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        body.dark-mode .item-actions button:hover {
+            box-shadow: 0 2px 5px rgba(255,255,255,0.1);
+        }
+
+
+        .play-button {
+            background-color: var(--play-button-bg-light); 
+            color: white;
+        }
+        .play-button:hover {
+            background-color: var(--play-button-hover-light);
+        }
+        body.dark-mode .play-button {
+            background-color: var(--play-button-bg-dark);
+        }
+         body.dark-mode .play-button:hover {
+            background-color: var(--play-button-hover-dark);
+        }
+
+
+        .download-button {
+            background-color: var(--download-button-bg-light); 
+            color: white;
+        }
+        .download-button:hover {
+            background-color: var(--download-button-hover-light);
+        }
+        body.dark-mode .download-button {
+            background-color: var(--download-button-bg-dark);
+        }
+        body.dark-mode .download-button:hover {
+            background-color: var(--download-button-hover-dark);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-style: italic;
+        }
+        body.dark-mode .no-results {
+            color: #aaa;
+        }
+
+
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            color: var(--rai-blue);
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        body.dark-mode .loading-indicator {
+            color: #58a6ff;
+        }
+        .loading-indicator::after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            40% { color: var(--rai-blue); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 var(--rai-blue), .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 var(--rai-blue), .5em 0 0 var(--rai-blue); }
+        }
+        body.dark-mode @keyframes dots {
+            40% { color: #58a6ff; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); }
+            60% { text-shadow: .25em 0 0 #58a6ff, .5em 0 0 rgba(0,0,0,0); }
+            80%, 100% { text-shadow: .25em 0 0 #58a6ff, .5em 0 0 #58a6ff; }
+        }
+
+        
+        .error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        body.dark-mode .error-message {
+            background-color: #3e2723; /* Darker red background */
+            color: #ffcdd2; /* Lighter red text */
+            border-color: #ef9a9a;
+        }
+        .error-message strong {
+            color: #b71c1c;
+        }
+        body.dark-mode .error-message strong {
+            color: #ef9a9a;
+        }
+
+        .error-message ul, .error-message ol {
+            margin-top: 10px;
+            padding-left: 20px;
+            text-align: left;
+            display: inline-block; 
+        }
+         .error-message p {
+            text-align: left;
+            margin-left: 20px;
+            margin-right: 20px;
+         }
+        .error-message code {
+            background-color: #fce4ec;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+         body.dark-mode .error-message code {
+            background-color: #5d4037;
+            color: #ffccbc;
+        }
+
+
+        .item-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .item-list::-webkit-scrollbar-track {
+            background: var(--scrollbar-track-light);
+            border-radius: 10px;
+        }
+        body.dark-mode .item-list::-webkit-scrollbar-track {
+            background: var(--scrollbar-track-dark);
+        }
+        .item-list::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb-light);
+            border-radius: 10px;
+        }
+        body.dark-mode .item-list::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb-dark);
+        }
+        .item-list::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover-light);
+        }
+         body.dark-mode .item-list::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Catalogo Media Rai</h1>
+
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Cerca titoli...">
+            <select id="typeFilter">
+                <option value="">Tutti i Tipi</option>
+            </select>
+            <button id="clearFiltersButton">Pulisci Filtri</button>
+            <button id="darkModeToggle">Modalità Scura</button>
+        </div>
+
+        <div id="catalogueContainer">
+            <p class="loading-indicator">Caricamento catalogo</p>
+        </div>
+    </div>
+
+    <script>
+        const originalDataUrl = 'https://d135zlh0icj7mk.cloudfront.net/_db_/oggi_in_tv/packaged/audio/catalogue_list.json';
+        const PROXY_URL = 'https://api.allorigins.win/raw?url='; 
+        const DATA_URL = PROXY_URL + encodeURIComponent(originalDataUrl);
+        // const DATA_URL = originalDataUrl; 
+
+        const catalogueContainer = document.getElementById('catalogueContainer');
+        const searchInput = document.getElementById('searchInput');
+        const typeFilter = document.getElementById('typeFilter');
+        const clearFiltersButton = document.getElementById('clearFiltersButton');
+        const darkModeToggleButton = document.getElementById('darkModeToggle');
+
+        let allData = [];
+        let itemTypes = new Set();
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                darkModeToggleButton.textContent = 'Modalità Chiara';
+            } else {
+                document.body.classList.remove('dark-mode');
+                darkModeToggleButton.textContent = 'Modalità Scura';
+            }
+        }
+
+        function toggleDarkMode() {
+            let currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                localStorage.setItem('theme', 'light');
+                applyTheme('light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                applyTheme('dark');
+            }
+        }
+        
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+            applyTheme(savedTheme);
+        }
+
+        darkModeToggleButton.addEventListener('click', toggleDarkMode);
+
+
+        async function fetchData() {
+            console.log("fetchData called. Attempting to fetch from:", DATA_URL);
+            catalogueContainer.innerHTML = '<p class="loading-indicator">Caricamento catalogo</p>';
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => {
+                    console.warn("Fetch timed out after 15 seconds.");
+                    controller.abort();
+                }, 15000);
+
+                console.log("Starting fetch...");
+                const response = await fetch(DATA_URL, { signal: controller.signal });
+                clearTimeout(timeoutId); 
+                console.log("Fetch response received. Status:", response.status, "OK:", response.ok);
+
+                if (!response.ok) {
+                    let errorText = "Impossibile recuperare il testo dell'errore dalla risposta.";
+                    try {
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && (contentType.includes("text/html") || contentType.includes("text/plain"))) {
+                             errorText = await response.text();
+                             console.error("Fetch response not OK. Response text (first 500 chars):", errorText.substring(0, 500));
+                        } else {
+                            console.warn("Fetch response not OK. Content-type is not text, so not logging full body. Status:", response.status);
+                        }
+                    } catch (textError) {
+                        console.error("Could not get text from non-OK response:", textError);
+                    }
+                    let errorMsg = `Errore HTTP! Stato: ${response.status}. Il proxy o l'URL di destinazione ha risposto con un errore. Uno snippet della risposta grezza potrebbe essere in console.`;
+                     if (response.status === 0 || response.type === 'opaque' || response.type === 'error') {
+                        errorMsg = `Errore di rete o problema CORS. La richiesta al proxy non è stata completata. Ciò significa che il proxy stesso potrebbe essere inattivo o irraggiungibile, oppure un problema del browser/rete sta impedendo la richiesta.`;
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                const rawData = await response.text();
+
+                let jsonData;
+                try {
+                    jsonData = JSON.parse(rawData);
+                } catch (e) {
+                    console.error("Failed to parse JSON. Raw data (first 500 chars):", rawData.substring(0,500));
+                    if (rawData.trim().toLowerCase().startsWith('<!doctype html') || rawData.trim().startsWith('<html')) {
+                         throw new Error("Impossibile analizzare JSON perché il proxy/server ha restituito una pagina HTML (probabilmente una pagina di errore) invece di JSON. Questo spesso indica un problema CORS in cui il proxy non è riuscito, o il server di destinazione ha bloccato il proxy. Controlla la scheda Rete negli strumenti per sviluppatori per la risposta grezza dal proxy.");
+                    }
+                    throw new Error("Impossibile analizzare i dati JSON dal proxy. I dati ricevuti non erano JSON validi.");
+                }
+
+                allData = jsonData;
+
+                if (!Array.isArray(allData)) {
+                    console.error("Fetched data is not an array after parsing:", allData);
+                    throw new Error("I dati recuperati non sono nel formato previsto (non un array). Il proxy potrebbe aver restituito un oggetto di errore o contenuto imprevisto.");
+                }
+                
+                console.log("Data fetched and parsed successfully. Number of categories:", allData.length);
+                if (allData.length === 0 && !originalDataUrl.includes('empty_test_url')) { 
+                    console.warn("Fetched data is an empty array. This might be an issue with the data source or proxy, or the catalogue is genuinely empty.");
+                }
+                populateTypeFilter();
+                renderCatalogue(allData);
+
+            } catch (error) {
+                console.error("Full error in fetchData catch block:", error);
+                let userErrorMessage = error.message;
+                if (error.name === 'AbortError') {
+                    userErrorMessage = "La richiesta è scaduta dopo 15 secondi. Il server o il proxy potrebbero essere troppo lenti, irraggiungibili, o potrebbe esserci un problema CORS che impedisce il completamento della richiesta anche con il proxy.";
+                } else if (error.message.includes("Failed to parse JSON") || error.message.includes("Impossibile analizzare JSON")) { 
+                    userErrorMessage = error.message; 
+                } else if (error.message.includes("NetworkError") || error.message.includes("CORS issue") || error.message.includes("Errore di rete") || error.message.includes("problema CORS")) { 
+                    userErrorMessage = `Si è verificato un errore di rete o un problema CORS: ${error.message}. Se stai eseguendo questo come file locale (<code>file:///</code>), questa è spesso la causa.`;
+                }
+
+
+                let detailedErrorMsg = `<div class="error-message"><strong>Errore nel caricamento del catalogo:</strong> ${userErrorMessage}<br><br>
+                     Questo potrebbe essere dovuto a:
+                     <ul>
+                         <li>Il proxy CORS pubblico (<code>api.allorigins.win</code>) temporaneamente non disponibile, che limita le richieste, o bloccato dalla fonte dei dati.</li>
+                         <li>La fonte dei dati di destinazione (<code>d135zlh0icj7mk.cloudfront.net</code>) che blocca il proxy o è inattiva.</li>
+                         <li>Un problema di connettività di rete da parte tua.</li>
+                         <li>I dati dalla fonte non sono JSON validi.</li>
+                     </ul>
+                     <strong>Per testare questa pagina localmente se il proxy continua a non funzionare, puoi provare:</strong>
+                     <ol>
+                         <li><strong>Usare un'estensione CORS per il browser:</strong> Cerca "CORS Unblock" o "Allow CORS" per il tuo browser e abilitala temporaneamente. <strong>Ricorda di disabilitarla dopo.</strong> Se usi un'estensione, potresti dover modificare <code>DATA_URL</code> nello script in <code>originalDataUrl</code> (commentando la riga del proxy e decommentando quella dell'URL diretto).</li>
+                         <li><strong>Eseguire un server web locale:</strong> Servi questo file HTML da un server locale (ad es., usando Python con <code>python -m http.server</code>, poi apri <code>http://localhost:8000/nome_tuo_file.html</code>). Anche con un server locale, probabilmente avrai ancora bisogno di un'estensione CORS.</li>
+                     </ol>
+                     <p>Per favore, controlla la console per sviluppatori del tuo browser (F12 -> schede Console e Rete) per messaggi di errore più specifici. Guarda la richiesta a <code>api.allorigins.win</code> per vedere cosa ha restituito.</p></div>`;
+                catalogueContainer.innerHTML = detailedErrorMsg;
+            }
+        }
+        
+        function populateTypeFilter() {
+            itemTypes.clear(); 
+            if (!Array.isArray(allData)) {
+                console.warn("allData is not an array in populateTypeFilter. Skipping.");
+                return;
+            }
+            allData.forEach(category => {
+                if (category && Array.isArray(category.data)) {
+                    category.data.forEach(item => {
+                        if (item && item.type) {
+                            itemTypes.add(item.type);
+                        }
+                    });
+                }
+            });
+
+            while (typeFilter.options.length > 1) {
+                typeFilter.remove(1);
+            }
+
+            itemTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type.charAt(0).toUpperCase() + type.slice(1); // Capitalize type for display
+                typeFilter.appendChild(option);
+            });
+        }
+
+        function renderCatalogue(dataToRender) {
+            catalogueContainer.innerHTML = ''; 
+
+            if (!Array.isArray(dataToRender) || dataToRender.length === 0 || dataToRender.every(cat => !cat.data || cat.data.length === 0)) {
+                 catalogueContainer.innerHTML = '<p class="no-results">Nessun elemento corrisponde ai tuoi criteri o dati non disponibili al momento.</p>';
+                return;
+            }
+
+            dataToRender.forEach(category => {
+                if (!category || !Array.isArray(category.data) || category.data.length === 0) return;
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category collapsed'; 
+
+                const categoryTitle = document.createElement('h2');
+                categoryTitle.className = 'category-title';
+                categoryTitle.textContent = category.title || 'Categoria Senza Titolo';
+                categoryTitle.onclick = () => {
+                    categoryDiv.classList.toggle('collapsed');
+                };
+                
+                const itemListDiv = document.createElement('div');
+                itemListDiv.className = 'item-list';
+
+                category.data.forEach(item => {
+                    if (!item || !item.title || !item.url) return; 
+
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'catalogue-item';
+
+                    const itemInfoDiv = document.createElement('div');
+                    itemInfoDiv.className = 'item-info';
+                    
+                    const itemTitle = document.createElement('div');
+                    itemTitle.className = 'item-title';
+                    itemTitle.textContent = item.title;
+
+                    const itemTypeSpan = document.createElement('span');
+                    itemTypeSpan.className = 'item-type';
+                    itemTypeSpan.textContent = item.type || 'N/D'; 
+
+                    itemInfoDiv.appendChild(itemTitle);
+                    itemInfoDiv.appendChild(itemTypeSpan);
+
+                    const itemActionsDiv = document.createElement('div');
+                    itemActionsDiv.className = 'item-actions';
+
+                    const playButton = document.createElement('button');
+                    playButton.className = 'play-button';
+                    playButton.textContent = 'Riproduci';
+                    playButton.onclick = () => window.open(item.url, '_blank');
+
+                    const downloadButton = document.createElement('button');
+                    downloadButton.className = 'download-button';
+                    downloadButton.textContent = 'Scarica';
+                    downloadButton.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = item.url;
+                        let filename = item.title.replace(/[^a-z0-9_ \.-]/gi, '_').substring(0, 50) || 'file_multimediale';
+                        
+                        const extensionMatch = item.url.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
+                        if (extensionMatch && extensionMatch[1]) {
+                             filename += '.' + extensionMatch[1];
+                        } else if (item.url.includes('.mp4')) filename += '.mp4'; 
+                        else if (item.url.includes('.mp3')) filename += '.mp3'; 
+
+                        a.download = filename; 
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+
+                    itemActionsDiv.appendChild(playButton);
+                    itemActionsDiv.appendChild(downloadButton);
+                    
+                    itemDiv.appendChild(itemInfoDiv);
+                    itemDiv.appendChild(itemActionsDiv);
+                    itemListDiv.appendChild(itemDiv);
+                });
+
+                categoryDiv.appendChild(categoryTitle);
+                categoryDiv.appendChild(itemListDiv);
+                catalogueContainer.appendChild(categoryDiv);
+            });
+        }
+
+        function applyFilters() {
+            if (!Array.isArray(allData)) {
+                renderCatalogue([]); 
+                return;
+            }
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedType = typeFilter.value;
+
+            let filteredData = allData.map(category => {
+                if (!category || !Array.isArray(category.data)) return {...category, data: []};
+                return {
+                    ...category,
+                    data: category.data.filter(item => {
+                        if (!item || !item.title) return false;
+                        const titleMatch = item.title.toLowerCase().includes(searchTerm);
+                        const typeMatch = selectedType ? item.type === selectedType : true;
+                        return titleMatch && typeMatch;
+                    })
+                };
+            }).filter(category => category && category.data && category.data.length > 0);
+
+            renderCatalogue(filteredData);
+        }
+
+        searchInput.addEventListener('input', applyFilters);
+        typeFilter.addEventListener('change', applyFilters);
+        
+        clearFiltersButton.addEventListener('click', () => {
+            searchInput.value = '';
+            typeFilter.value = '';
+            renderCatalogue(allData); 
+        });
+
+        // Load theme preference on page load
+        loadThemePreference();
+        // Initial data fetch
+        fetchData();
+    </script>
+</body>
+</html>
