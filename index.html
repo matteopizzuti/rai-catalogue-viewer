@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogo Media Rai</title>
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
         :root {
             --bg-color-light: #f4f7f6;
             --text-color-light: #333;
@@ -35,7 +49,7 @@
             --card-bg-dark: #2c2c2c;
             --card-border-dark: #444;
             --input-border-dark: #555;
-            --button-primary-bg-dark: #007bff; /* Can keep some primary colors or adjust */
+            --button-primary-bg-dark: #007bff;
             --button-primary-hover-dark: #0056b3;
             --play-button-bg-dark: #28a745;
             --play-button-hover-dark: #218838;
@@ -48,19 +62,6 @@
             --item-type-text-dark: #bbb;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: var(--bg-color-light);
-            color: var(--text-color-light);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-mode {
-            background-color: var(--bg-color-dark);
-            color: var(--text-color-dark);
-        }
 
         .container {
             max-width: 1200px;
@@ -83,7 +84,7 @@
             margin-bottom: 25px;
         }
         body.dark-mode h1 {
-            color: #58a6ff; /* Lighter blue for dark mode */
+            color: #58a6ff; 
         }
 
 
@@ -108,7 +109,7 @@
             border-radius: 4px;
             font-size: 16px;
             flex-grow: 1;
-            background-color: var(--container-bg-light); /* Assuming inputs are on a light bg by default */
+            background-color: var(--container-bg-light); 
             color: var(--text-color-light);
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
@@ -121,11 +122,11 @@
 
 
         .controls input[type="text"] {
-            min-width: 200px; /* Adjusted for smaller screens */
+            min-width: 200px; 
         }
         
         .controls select {
-            min-width: 130px; /* Adjusted */
+            min-width: 130px; 
         }
         
         .controls button, #darkModeToggle {
@@ -140,7 +141,6 @@
         }
          body.dark-mode .controls button, body.dark-mode #darkModeToggle {
             background-color: var(--button-primary-bg-dark);
-            /* color: var(--text-color-dark); Potentially, or keep white */
         }
 
 
@@ -152,7 +152,7 @@
         }
         
         #darkModeToggle {
-            margin-left: auto; /* Pushes it to the right */
+            margin-left: auto; 
         }
 
 
@@ -177,7 +177,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        /* No specific dark mode change needed for category-title if bg/text vars are sufficient */
         
         .category-title::after {
             content: '▼'; 
@@ -191,13 +190,13 @@
 
         .item-list {
             padding: 15px;
-            background-color: var(--card-bg-light); /* Item list bg can be same as card */
+            background-color: var(--bg-color-light); 
             max-height: 500px; 
             overflow-y: auto; 
             transition: max-height 0.5s ease-out, padding 0.5s ease-out, background-color 0.3s;
         }
         body.dark-mode .item-list {
-            background-color: var(--bg-color-dark); /* Slightly different from card for depth */
+            background-color: var(--bg-color-dark); 
         }
         
         .category.collapsed .item-list {
@@ -361,8 +360,8 @@
             text-align: center;
         }
         body.dark-mode .error-message {
-            background-color: #3e2723; /* Darker red background */
-            color: #ffcdd2; /* Lighter red text */
+            background-color: #3e2723; 
+            color: #ffcdd2; 
             border-color: #ef9a9a;
         }
         .error-message strong {
@@ -439,10 +438,20 @@
     </div>
 
     <script>
-        const originalDataUrl = 'https://d135zlh0icj7mk.cloudfront.net/_db_/oggi_in_tv/packaged/audio/catalogue_list.json';
-        const PROXY_URL = 'https://api.allorigins.win/raw?url='; 
-        const DATA_URL = PROXY_URL + encodeURIComponent(originalDataUrl);
-        // const DATA_URL = originalDataUrl; 
+        // --- Data Source Configuration ---
+        // Option 1: Use a local file (RECOMMENDED for GitHub Pages if proxy is unstable)
+        // 1. Manually download the JSON from the originalDataUrl.
+        // 2. Create a 'data' folder in your project.
+        // 3. Save the downloaded file as 'catalogue_list.json' inside the 'data' folder.
+        // 4. Uncomment the line below and comment out Option 2.
+        const DATA_URL = 'data/catalogue_list.json'; 
+
+        // Option 2: Use a public CORS proxy (can be unreliable)
+        // const originalDataUrl = 'https://d135zlh0icj7mk.cloudfront.net/_db_/oggi_in_tv/packaged/audio/catalogue_list.json';
+        // const PROXY_URL = 'https://api.allorigins.win/raw?url='; 
+        // const DATA_URL = PROXY_URL + encodeURIComponent(originalDataUrl);
+        // --- End Data Source Configuration ---
+
 
         const catalogueContainer = document.getElementById('catalogueContainer');
         const searchInput = document.getElementById('searchInput');
@@ -475,7 +484,7 @@
         }
         
         function loadThemePreference() {
-            const savedTheme = localStorage.getItem('theme') || 'light'; // Default to light
+            const savedTheme = localStorage.getItem('theme') || 'light'; 
             applyTheme(savedTheme);
         }
 
@@ -510,9 +519,9 @@
                     } catch (textError) {
                         console.error("Could not get text from non-OK response:", textError);
                     }
-                    let errorMsg = `Errore HTTP! Stato: ${response.status}. Il proxy o l'URL di destinazione ha risposto con un errore. Uno snippet della risposta grezza potrebbe essere in console.`;
-                     if (response.status === 0 || response.type === 'opaque' || response.type === 'error') {
-                        errorMsg = `Errore di rete o problema CORS. La richiesta al proxy non è stata completata. Ciò significa che il proxy stesso potrebbe essere inattivo o irraggiungibile, oppure un problema del browser/rete sta impedendo la richiesta.`;
+                    let errorMsg = `Errore HTTP! Stato: ${response.status}. Il server (o proxy) ha risposto con un errore.`;
+                    if (response.status === 0 || response.type === 'opaque' || response.type === 'error') {
+                        errorMsg = `Errore di rete o problema CORS. La richiesta al server (o proxy) non è stata completata.`;
                     }
                     throw new Error(errorMsg);
                 }
@@ -524,22 +533,23 @@
                     jsonData = JSON.parse(rawData);
                 } catch (e) {
                     console.error("Failed to parse JSON. Raw data (first 500 chars):", rawData.substring(0,500));
+                     let parseErrorMsg = "Impossibile analizzare i dati JSON. I dati ricevuti non erano JSON validi.";
                     if (rawData.trim().toLowerCase().startsWith('<!doctype html') || rawData.trim().startsWith('<html')) {
-                         throw new Error("Impossibile analizzare JSON perché il proxy/server ha restituito una pagina HTML (probabilmente una pagina di errore) invece di JSON. Questo spesso indica un problema CORS in cui il proxy non è riuscito, o il server di destinazione ha bloccato il proxy. Controlla la scheda Rete negli strumenti per sviluppatori per la risposta grezza dal proxy.");
+                         parseErrorMsg = "Impossibile analizzare JSON perché il server (o proxy) ha restituito una pagina HTML invece di JSON. Questo spesso indica un errore lato server o un problema con il proxy. Controlla la scheda Rete negli strumenti per sviluppatori.";
                     }
-                    throw new Error("Impossibile analizzare i dati JSON dal proxy. I dati ricevuti non erano JSON validi.");
+                    throw new Error(parseErrorMsg);
                 }
 
                 allData = jsonData;
 
                 if (!Array.isArray(allData)) {
                     console.error("Fetched data is not an array after parsing:", allData);
-                    throw new Error("I dati recuperati non sono nel formato previsto (non un array). Il proxy potrebbe aver restituito un oggetto di errore o contenuto imprevisto.");
+                    throw new Error("I dati recuperati non sono nel formato previsto (non un array).");
                 }
                 
                 console.log("Data fetched and parsed successfully. Number of categories:", allData.length);
-                if (allData.length === 0 && !originalDataUrl.includes('empty_test_url')) { 
-                    console.warn("Fetched data is an empty array. This might be an issue with the data source or proxy, or the catalogue is genuinely empty.");
+                if (allData.length === 0 && !DATA_URL.includes('empty_test_url')) { // Check if it's not a deliberate empty test
+                    console.warn("Fetched data is an empty array. This might be an issue with the data source, or the catalogue is genuinely empty.");
                 }
                 populateTypeFilter();
                 renderCatalogue(allData);
@@ -548,28 +558,20 @@
                 console.error("Full error in fetchData catch block:", error);
                 let userErrorMessage = error.message;
                 if (error.name === 'AbortError') {
-                    userErrorMessage = "La richiesta è scaduta dopo 15 secondi. Il server o il proxy potrebbero essere troppo lenti, irraggiungibili, o potrebbe esserci un problema CORS che impedisce il completamento della richiesta anche con il proxy.";
-                } else if (error.message.includes("Failed to parse JSON") || error.message.includes("Impossibile analizzare JSON")) { 
-                    userErrorMessage = error.message; 
-                } else if (error.message.includes("NetworkError") || error.message.includes("CORS issue") || error.message.includes("Errore di rete") || error.message.includes("problema CORS")) { 
+                    userErrorMessage = "La richiesta è scaduta dopo 15 secondi. Il server potrebbe essere troppo lento o irraggiungibile.";
+                } else if (error.message.includes("Errore di rete") || error.message.includes("problema CORS")) { 
                     userErrorMessage = `Si è verificato un errore di rete o un problema CORS: ${error.message}. Se stai eseguendo questo come file locale (<code>file:///</code>), questa è spesso la causa.`;
                 }
 
-
                 let detailedErrorMsg = `<div class="error-message"><strong>Errore nel caricamento del catalogo:</strong> ${userErrorMessage}<br><br>
-                     Questo potrebbe essere dovuto a:
-                     <ul>
-                         <li>Il proxy CORS pubblico (<code>api.allorigins.win</code>) temporaneamente non disponibile, che limita le richieste, o bloccato dalla fonte dei dati.</li>
-                         <li>La fonte dei dati di destinazione (<code>d135zlh0icj7mk.cloudfront.net</code>) che blocca il proxy o è inattiva.</li>
-                         <li>Un problema di connettività di rete da parte tua.</li>
-                         <li>I dati dalla fonte non sono JSON validi.</li>
-                     </ul>
-                     <strong>Per testare questa pagina localmente se il proxy continua a non funzionare, puoi provare:</strong>
+                     Verifica la tua connessione internet. Se il problema persiste e stai usando un file locale, potrebbe trattarsi di un problema CORS.
+                     <br><br><strong>Se stai sviluppando localmente e vedi questo errore con un file <code>file:///</code>:</strong>
                      <ol>
-                         <li><strong>Usare un'estensione CORS per il browser:</strong> Cerca "CORS Unblock" o "Allow CORS" per il tuo browser e abilitala temporaneamente. <strong>Ricorda di disabilitarla dopo.</strong> Se usi un'estensione, potresti dover modificare <code>DATA_URL</code> nello script in <code>originalDataUrl</code> (commentando la riga del proxy e decommentando quella dell'URL diretto).</li>
-                         <li><strong>Eseguire un server web locale:</strong> Servi questo file HTML da un server locale (ad es., usando Python con <code>python -m http.server</code>, poi apri <code>http://localhost:8000/nome_tuo_file.html</code>). Anche con un server locale, probabilmente avrai ancora bisogno di un'estensione CORS.</li>
+                         <li><strong>Usa un'estensione CORS per il browser:</strong> Cerca "CORS Unblock" o "Allow CORS" per il tuo browser e abilitala temporaneamente. <strong>Ricorda di disabilitarla dopo.</strong></li>
+                         <li><strong>Esegui un server web locale:</strong> Servi questo file HTML da un server locale (ad es., usando Python con <code>python -m http.server</code>, poi apri <code>http://localhost:8000/nome_tuo_file.html</code>).</li>
                      </ol>
-                     <p>Per favore, controlla la console per sviluppatori del tuo browser (F12 -> schede Console e Rete) per messaggi di errore più specifici. Guarda la richiesta a <code>api.allorigins.win</code> per vedere cosa ha restituito.</p></div>`;
+                     <p>Se stai usando il metodo del file locale <code>data/catalogue_list.json</code>, assicurati che il file esista in quella posizione e sia JSON valido.</p>
+                     <p>Controlla la console per sviluppatori del tuo browser (F12 -> schede Console e Rete) per messaggi di errore più specifici.</p></div>`;
                 catalogueContainer.innerHTML = detailedErrorMsg;
             }
         }
@@ -597,7 +599,7 @@
             itemTypes.forEach(type => {
                 const option = document.createElement('option');
                 option.value = type;
-                option.textContent = type.charAt(0).toUpperCase() + type.slice(1); // Capitalize type for display
+                option.textContent = type.charAt(0).toUpperCase() + type.slice(1); 
                 typeFilter.appendChild(option);
             });
         }
@@ -721,9 +723,7 @@
             renderCatalogue(allData); 
         });
 
-        // Load theme preference on page load
         loadThemePreference();
-        // Initial data fetch
         fetchData();
     </script>
 </body>
